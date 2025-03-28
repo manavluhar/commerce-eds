@@ -102,6 +102,31 @@ export default async function decorate(block) {
 
           ctx.appendChild(giftOptions);
         },
+        ProductAttributes: (ctx) => {
+          // Prepend Product Attributes
+          const ProductAttributes = ctx.item?.productAttributes;
+
+          ProductAttributes?.forEach((attr) => {
+            if (attr.code === 'Fashion Material' || attr.code === 'Fashion Style') {
+              if (attr.selected_options) {
+                const selectedOptions = attr.selected_options
+                  .filter((option) => option.label.trim() !== '')
+                  .map((option) => option.label)
+                  .join(', ');
+
+                if (selectedOptions) {
+                  const productAttribute = document.createElement('div');
+                  productAttribute.innerText = `${attr.code}: ${selectedOptions}`;
+                  ctx.appendChild(productAttribute);
+                }
+              } else if (attr.value) {
+                const productAttribute = document.createElement('div');
+                productAttribute.innerText = `${attr.code}: ${attr.value}`;
+                ctx.appendChild(productAttribute);
+              }
+            }
+          });
+        },
       },
     })($list),
 
